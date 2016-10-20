@@ -7,4 +7,4 @@ Uses pygame for GUI.
 ##Build instructions
 Directly run the python file 2048.py using python3
 
-`python3 2048.py`
+```python3 2048.py```
