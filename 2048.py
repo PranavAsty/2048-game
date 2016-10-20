@@ -14,6 +14,14 @@ background = pygame.Surface(screen.get_size())
 background = background.convert()
 background.fill((250, 250, 250))
 
+coords = [(50,50,100,100),(155,50,100,100),(260,50,100,100),(365,50,100,100),
+          (50,155,100,100),(155,155,100,100),(260,155,100,100),(365,155,100,100),\
+          (50,260,100,100),(155,260,100,100),(260,260,100,100),(365,260,100,100),\
+          (50,365,100,100),(155,365,100,100),(260,365,100,100),(365,365,100,100) ]
+rects = []
+c = ['white','light gray','dark gray','maroon','red','green','blue','yellow','gold','purple','brown','orange','pink','violet']
+colors = {2**(i):pygame.Color(c[i]) for i in range(len(c))}
+
 board=[]
 possgen = [2,4]
 ask=1
@@ -35,6 +43,20 @@ def init():
         board[i+1]=possgen[random.randint(0,1)]
     show()
 
+def animate_draw(coord,bg):
+
+    x = coord[2]/2
+    y = coord[3]/2
+    i=0
+    j=0
+
+    while i<=x and j<=y:
+        pygame.draw.rect(screen,bg,(coord[0]+x-(i/2),coord[1]+y-(j/2),i,j))
+        pygame.display.flip()
+        i=i+5
+        j=j+5
+        pygame.time.wait(3)
+
 
 def show():
     os.system('clear')
@@ -44,26 +66,22 @@ def show():
     print('||',board[8],'|',board[9],'|',board[10],'|',board[11],'||')
     print('||',board[12],'|',board[13],'|',board[14],'|',board[15],'||')
 
+
+
     BG_COLOR = (200,200,200)
     TEXT_COLOR = (0,0,0)
 
-
+    screen.blit(background, (0, 0))
+    pygame.time.wait(10)
     pygame.draw.rect(screen,(0,0,0),(40,40,435,435))
 
-    coords = [(50,50,100,100),(155,50,100,100),(260,50,100,100),(365,50,100,100),
-              (50,155,100,100),(155,155,100,100),(260,155,100,100),(365,155,100,100),\
-              (50,260,100,100),(155,260,100,100),(260,260,100,100),(365,260,100,100),\
-              (50,365,100,100),(155,365,100,100),(260,365,100,100),(365,365,100,100) ]
-
-    rects = []
-    c = ['white','light gray','dark gray','maroon','red','green','blue','yellow','gold','purple','brown','orange','pink','violet']
-    colors = {2**(i):pygame.Color(c[i]) for i in range(len(c))}
+    global rects,colors
     for i in range(16):
         if board[i]==0:
             BG_COLOR = pygame.Color('white')
         else:
             BG_COLOR = colors[board[i]]
-        rects.append(pygame.draw.rect(screen,  BG_COLOR,coords[i]))
+        rects.append(pygame.draw.rect(screen,BG_COLOR,coords[i]))
 
 
     FONT_SIZE = 50
@@ -71,20 +89,13 @@ def show():
 
     screen.blit(font.render('Score: '+str(score), 1,TEXT_COLOR),(500,50))
 
-    gold = pygame.Color('gold')
-    gray = pygame.Color('gray')
-    maroon = pygame.Color('maroon')
-    red = pygame.Color('red')
-    yellow = pygame.Color('yellow')
-
-    for i in range(len(rects)):
+    for i in range(16):
         if board[i]!=0:
             xCut = len(str(board[i]))*FONT_SIZE/4
             yCut = FONT_SIZE/2
             screen.blit(font.render(str(board[i]), 1,TEXT_COLOR),(rects[i].centerx-xCut,rects[i].centery-yCut))
 
-
-
+    pygame.display.flip()
 
 
 def leftA():
@@ -216,7 +227,9 @@ def gen():
     while 1:
         i = random.randint(0,15)
         if board[i]==0:
+            pygame.time.wait(10)
             board[i]=possgen[random.randint(0,1)]
+            animate_draw(coords[i],colors[board[i]])
             break
 
 
@@ -253,40 +266,56 @@ def gameOver():
 def L():
     initialBoard=board[:]
     leftA()
+    show()
     leftA()
+    show()
     leftA()
+    show()
     leftB()
     if not board==initialBoard:
+        show()
         gen()
     show()
 
 def R():
     initialBoard=board[:]
     rightA()
+    show()
     rightA()
+    show()
     rightA()
+    show()
     rightB()
     if not board==initialBoard:
+        show()
         gen()
     show()
 
 def U():
     initialBoard=board[:]
     upA()
+    show()
     upA()
+    show()
     upA()
+    show()
     upB()
     if not board==initialBoard:
+        show()
         gen()
     show()
 
 def D():
     initialBoard=board[:]
     downA()
+    show()
     downA()
+    show()
     downA()
+    show()
     downB()
     if not board==initialBoard:
+        show()
         gen()
     show()
 
